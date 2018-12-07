@@ -37,6 +37,7 @@ VARIABLE ACTUAL-DEPTH         \ STACK RECORD
 CREATE ACTUAL-RESULTS 20 CELLS ALLOT
 
 : T{      \ ( -- ) SYNTACTIC SUGAR.
+	." about to test: " source type cr
    ;
 
 : ->      \ ( ... -- ) RECORD DEPTH AND CONTENT OF STACK.
@@ -55,7 +56,9 @@ CREATE ACTUAL-RESULTS 20 CELLS ALLOT
          LOOP
       THEN
    ELSE               \ DEPTH MISMATCH
-      S" WRONG NUMBER OF RESULTS: " ERROR
+	   ." actual stack contents: " actual-depth @ 0 ?do i cells actual-results + @ . loop
+      S" WRONG NUMBER OF RESULTS: "
+	   ERROR
    THEN ;
 
 : TESTING   \ ( -- ) TALKING COMMENT.

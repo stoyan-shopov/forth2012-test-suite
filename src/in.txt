@@ -1,0 +1,9 @@
+
+:noname base @ hex >r ." +loop: count, limit: " 2dup u. u. ." (signed: " . . ." )"cr r> base ! ;
+variable +loop-store
+: +loop
+	literal postpone 2r@ , r> +loop-store ! postpone +loop +loop-store @ >r ; immediate
+
+\ true colon-debug !
+include runtests.fth
+
