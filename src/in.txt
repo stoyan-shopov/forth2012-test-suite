@@ -1,3 +1,32 @@
+: undefined-xt true abort" Undefined xt execution request in 'defer'-ed word!" ;
+: defer
+	create ['] undefined-xt , does> @ execute ;
+
+: is
+	' state @ false <>
+	if ( compiling)
+		postpone literal postpone >body postpone !
+	else ( interpreting)
+		>body !
+	then ; immediate
+
+: action-of
+	' state @ false <>
+	if ( compiling)
+		postpone literal postpone >body postpone @
+	else ( interpreting)
+		>body @
+	then ; immediate
+
+: defer! ( xt2 xt1 -- )
+	>body ! ;
+: defer@ ( xt1 -- xt2)
+	>body @ ;
+: holds ( c-addr u --)
+	swap over + swap
+	0 ?do 1- dup c@ hold loop drop
+	;
+
 
 :noname base @ hex >r ." +loop: count, limit: " 2dup u. u. ." (signed: " . . ." )"cr r> base ! ;
 variable +loop-store
