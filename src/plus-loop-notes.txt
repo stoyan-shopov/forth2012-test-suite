@@ -1,3 +1,26 @@
+Failing +loop tests
+Comparison is:
+
+(index < limit && limit <= index + step)
+OR
+(index + step < limit && limit <= index)
+
+about to test: T{ 0 MIN-INT MAX-INT  STEP +WRAP? 1 GD9
++loop: index, limit, step: 7FFFFFFFFFFFFFFF 8000000000000000 100000000000000 (signed: 7FFFFFFFFFFFFFFF -8000000000000000 100000000000000 )
+about to test: T{ 0 MAX-INT MIN-INT -STEP -WRAP? 1 GD9
++loop: index, limit, step: 8000000000000000 7FFFFFFFFFFFFFFF FF00000000000000 (signed: -8000000000000000 7FFFFFFFFFFFFFFF -100000000000000 )
+
+
+T{ 0 MIN-INT MAX-INT  STEP +WRAP? 1 GD9
+index	limit	step	
+$7fff	$8000	$1000
+
+about to test: T{ 0 MAX-INT MIN-INT -STEP -WRAP? 1 GD9
+index	limit	step	
+$8000	$7fff	$ff00
+
+
+
 These tests fail with this code:
 
 static void runtime_plus_loop(void)
