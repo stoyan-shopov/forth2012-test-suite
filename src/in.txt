@@ -28,10 +28,10 @@
 	;
 
 
-:noname base @ hex >r ." +loop: count, limit: " 2dup u. u. ." (signed: " . . ." )"cr r> base ! ;
 variable +loop-store
+:noname base @ hex >r ." +loop: index, limit, step: " 2dup u. u. rot dup >r u. ." (signed: " . . r> . ." )"cr r> base ! ;
 : +loop
-	literal postpone 2r@ , r> +loop-store ! postpone +loop +loop-store @ >r ; immediate
+	literal postpone dup postpone 2r@ , r> +loop-store ! postpone +loop +loop-store @ >r ; immediate
 
 \ true colon-debug !
 include runtests.fth

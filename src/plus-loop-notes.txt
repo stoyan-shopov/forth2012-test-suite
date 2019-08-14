@@ -1,0 +1,95 @@
+These tests fail with this code:
+
+static void runtime_plus_loop(void)
+{
+sdcell index, index1, limit, limit_minus1, step;
+
+	if (rsp < 2)
+		sabort("runtime +loop: bad return stack");
+	index = ((scell *)rstack)[rsp - 1];
+	limit = ((scell *)rstack)[rsp - 2];
+	limit_minus1 = limit - 1;
+	step = spop();
+	index1 = index + step;
+	int sindex, sstep, slimit;
+	sindex = (index < 0) ? 1 : 0;
+	sstep = (step < 0) ? 1 : 0;
+	slimit = (limit < 0) ? 1 : 0;
+
+	//if (!(!sindex && !sstep && slimit))
+	if (1)
+	{
+		if ((index < limit && limit <= index1)
+				|| (index1 < limit && limit <= index))
+			dstack[sp] = 1;
+		else
+			dstack[sp] = 0;
+	}
+	else
+	{
+		print_str("in +loop, sign difference\n");
+		if (((scell)index < (scell)limit && (scell)limit <= (scell)index1)
+				|| ((scell)index1 < (scell)limit && (scell)limit <= (scell)index))
+			dstack[sp] = 1;
+		else
+			dstack[sp] = 0;
+	}
+
+	/*
+	if (index <= index1)
+	{
+		if (index < limit && limit <= index1)
+			dstack[sp] = 1;
+		else
+			dstack[sp] = 0;
+	}
+	else
+	{
+		if (index1 < limit)
+			dstack[sp] = 1;
+		else
+			dstack[sp] = 0;
+	}
+	*/
+	sp ++;
+	rstack[rsp - 1] = step + index;
+}
+
+about to test: T{ 0 MIN-INT MAX-INT  STEP +WRAP? 1 GD9
++loop: index, limit, step: 7FFFFFFFFFFFFFFF 8000000000000000 100000000000000 (signed: 7FFFFFFFFFFFFFFF -8000000000000000 100000000000000 )
+
+about to test: T{ 0 MAX-INT MIN-INT -STEP -WRAP? 1 GD9
++loop: index, limit, step: 8000000000000000 7FFFFFFFFFFFFFFF FF00000000000000 (signed: -8000000000000000 7FFFFFFFFFFFFFFF -100000000000000 )
+
+
+
+
+
+
+These tests fail with this code:
+static void runtime_plus_loop(void)
+{
+sdcell cnt, limit, step;
+
+	if (rsp < 2)
+		sabort("runtime +loop: bad return stack");
+	cnt = ((cell *)rstack)[rsp - 1];
+	limit = ((cell *)rstack)[rsp - 2];
+	step = spop();
+	if ((cnt <= limit - 1 && limit - 1 < cnt + step)
+			|| (cnt + step <= limit - 1 && limit - 1 < cnt))
+		dstack[sp] = 1;
+	else
+		dstack[sp] = 0;
+	sp ++;
+	rstack[rsp - 1] = step + cnt;
+}
+
+about to test: T{ 0 0 0  USTEP +UWRAP? 256 GD9
++loop: index, limit, step: 0 0 100000000000000 (signed: 0 0 100000000000000 )
+
+about to test: T{ 0 MIN-INT 1+   0 MIN-INT GD8  -> 1 }T
++loop: index, limit, step: 0 8000000000000001 8000000000000000 (signed: 0 -7FFFFFFFFFFFFFFF -8000000000000000 )
+
+
+
